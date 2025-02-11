@@ -70,6 +70,10 @@ public class Program
 
             app.MapControllers();
 
+           
+            ApplyMigrations(app);
+
+
             app.Run();
         }
         catch (Exception ex)
@@ -79,6 +83,29 @@ public class Program
         finally
         {
             Log.CloseAndFlush();
+        }
+    }
+
+    /// <summary>
+    /// Automatically applies migrations when starting the application.
+    /// </summary>
+    private static void ApplyMigrations(WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+
+            try
+            {
+                Log.Information("Applying database migrations...");
+                dbContext.Database.Migrate();
+                Log.Information("Database migrations applied successfully.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred while applying database migrations.");
+                throw;
+            }
         }
     }
 }
