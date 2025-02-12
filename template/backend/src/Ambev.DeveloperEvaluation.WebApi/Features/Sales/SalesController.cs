@@ -65,6 +65,32 @@ public class SalesController : BaseController
     }
 
     /// <summary>
+    /// Retrieves all sales
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>All sales</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSales(CancellationToken cancellationToken)
+    {
+    
+        var request = new GetAllSalesRequest {  };
+
+
+        //var command = _mapper.Map<GetAllSalesCommand>(request.Customer);
+        var command = new GetAllSalesCommand();
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Ok(new ApiResponseWithData<List<GetSaleResponse>>
+        {
+            Success = true,
+            Message = "Sale retrieved successfully",
+            Data = _mapper.Map<List<GetSaleResponse>>(response)
+        });
+    }
+
+    /// <summary>
     /// Retrieves a Sale by their ID
     /// </summary>
     /// <param name="id">The unique identifier of the Sale</param>
@@ -74,7 +100,7 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetSale([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSaleById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new GetSaleRequest { Id = id };
         var validator = new GetSaleRequestValidator();

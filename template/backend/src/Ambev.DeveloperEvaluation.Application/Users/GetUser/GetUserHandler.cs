@@ -27,6 +27,7 @@ public class GetUserHandler : IRequestHandler<GetUserCommand, GetUserResult>
         _mapper = mapper;
     }
 
+
     /// <summary>
     /// Handles the GetUserCommand request
     /// </summary>

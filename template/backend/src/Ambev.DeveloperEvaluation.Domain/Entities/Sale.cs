@@ -15,7 +15,7 @@ public class Sale : BaseEntity
     public decimal TotalAmount { get; private set; }
     public string Branch { get; set; }
     public bool IsCancelled { get; private set; }
-    public List<SaleItem> Items { get; set; } = new();
+    public List<SaleItem> Items { get; set; } = new List<SaleItem>();
 
     public void AddItem(SaleItem item)
     {

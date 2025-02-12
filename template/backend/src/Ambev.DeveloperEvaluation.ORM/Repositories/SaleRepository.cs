@@ -35,20 +35,20 @@ public class SaleRepository : ISaleRepository
     }
 
 
-    public async Task<IEnumerable<Sale>> GetAllAsync()
+    public async Task<IEnumerable<Sale>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Sales
                .Include(s => s.Items)
-               .ToListAsync();
+               .ToListAsync(cancellationToken);
     }
 
 
-    public async Task<IEnumerable<Sale>> GetByCustomerAsync(string customer)
+    public async Task<IEnumerable<Sale>> GetByCustomerAsync(string customer, CancellationToken cancellationToken = default)
     {
         return await _context.Sales
             .Include(s => s.Items)
             .Where(s => s.Customer == customer)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -82,10 +82,11 @@ public class SaleRepository : ISaleRepository
     }
 
 
-    public async Task UpdateAsync(Sale sale)
+    public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
     {
         _context.Sales.Update(sale);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
+        return sale;
     }
 
     
