@@ -35,11 +35,37 @@ public class SaleRepository : ISaleRepository
     }
 
 
-    public async Task<IEnumerable<Sale>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Sale>> GetAllAsync(string? customer, DateTime? minDate, DateTime? maxDate, CancellationToken cancellationToken = default)
     {
-        return await _context.Sales
-               .Include(s => s.Items)
-               .ToListAsync(cancellationToken);
+
+        IQueryable<Sale> query = _context.Sales.Include(s => s.Items);
+
+        // Apply filtering by Customer (if provided)
+        if (!string.IsNullOrEmpty(customer))
+        {
+            query = query.Where(s => s.Customer.Contains(customer));
+        }
+
+        // Apply filtering by MinDate (if provided)
+        if (minDate.HasValue)
+        {
+            minDate = DateTime.SpecifyKind(minDate.Value, DateTimeKind.Utc);
+            query = query.Where(s => s.SaleDate >= minDate);
+        }
+
+        // Apply filtering by MaxDate (if provided)
+        if (maxDate.HasValue)
+        {
+            maxDate = DateTime.SpecifyKind(maxDate.Value, DateTimeKind.Utc);
+            query = query.Where(s => s.SaleDate <= maxDate);
+        }
+
+        // Default ordering
+        query = query.OrderBy(s => s.Id);
+
+        return await query.ToListAsync();
+
+       
     }
 
 

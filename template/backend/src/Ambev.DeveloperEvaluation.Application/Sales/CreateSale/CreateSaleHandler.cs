@@ -57,7 +57,8 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         {
             SaleNumber = command.SaleNumber,
             Customer = command.Customer,
-            Branch = command.Branch
+            Branch = command.Branch,
+            SaleDate = DateTime.UtcNow
         };
 
         foreach (var item in command.Items)

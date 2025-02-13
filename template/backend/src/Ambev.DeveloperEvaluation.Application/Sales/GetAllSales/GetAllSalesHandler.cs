@@ -37,7 +37,7 @@ public class GetAllSalesHandler : IRequestHandler<GetAllSalesCommand, List<GetSa
     /// <returns></returns>
     public async Task<List<GetSaleResult>> Handle(GetAllSalesCommand request, CancellationToken cancellationToken)
     {
-        var sales = await _saleRepository.GetAllAsync(cancellationToken);
+        var sales = await _saleRepository.GetAllAsync(request.Customer, request.MinDate, request.MaxDate, cancellationToken);
         return _mapper.Map<List<GetSaleResult>>(sales);
     }
 }

@@ -72,20 +72,32 @@ public class SalesController : BaseController
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetSales(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSales([FromQuery] string? customer, DateTime? _minDate, DateTime? _maxDate, 
+        CancellationToken cancellationToken)
     {
-    
-        var request = new GetAllSalesRequest {  };
+
+        
+        _minDate = _minDate?.ToUniversalTime();
+        _maxDate = _maxDate?.ToUniversalTime(); 
+        
+        var request = new GetAllSalesRequest {
+            Customer = customer,
+            MinDate = _minDate,
+            MaxDate = _maxDate
+        };
 
 
-        //var command = _mapper.Map<GetAllSalesCommand>(request.Customer);
-        var command = new GetAllSalesCommand();
+        var command = _mapper.Map<GetAllSalesCommand>(request);
+        //var command = new GetAllSalesCommand();
         var response = await _mediator.Send(command, cancellationToken);
+
+        if (response == null || response.Count == 0)
+            return NotFound(new ApiResponse { Success = false, Message = "No sales found" });
 
         return Ok(new ApiResponseWithData<List<GetSaleResponse>>
         {
             Success = true,
-            Message = "Sale retrieved successfully",
+            Message = "Sales retrieved successfully",
             Data = _mapper.Map<List<GetSaleResponse>>(response)
         });
     }
