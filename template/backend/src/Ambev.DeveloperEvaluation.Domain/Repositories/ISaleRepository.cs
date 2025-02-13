@@ -13,6 +13,6 @@ public interface ISaleRepository
     Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default); 
     Task<IEnumerable<Sale>> GetAllAsync(string? customer, DateTime? minDate, DateTime? maxDate, CancellationToken cancellationToken = default);
     Task<IEnumerable<Sale>> GetByCustomerAsync(string customer, CancellationToken cancellationToken = default);
-    Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default);
+    Task<bool> UpdateAsync(Sale sale, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

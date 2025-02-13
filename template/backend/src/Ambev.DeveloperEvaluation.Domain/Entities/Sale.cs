@@ -14,7 +14,7 @@ public class Sale : BaseEntity
     public string Customer { get; set; }
     public decimal TotalAmount { get; private set; }
     public string Branch { get; set; }
-    public bool IsCancelled { get; private set; }
+    public bool IsCancelled { get; set; }
     public List<SaleItem> Items { get; set; } = new List<SaleItem>();
 
     public void AddItem(SaleItem item)
@@ -25,11 +25,6 @@ public class Sale : BaseEntity
         item.ApplyDiscount();
         Items.Add(item);
         RecalculateTotal();
-    }
-
-    public void CancelSale()
-    {
-        IsCancelled = true;
     }
 
     private void RecalculateTotal()
