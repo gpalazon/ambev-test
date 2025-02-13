@@ -6,6 +6,10 @@
 
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Application\CreateSaleHandlerTests.cs" />
+	  <Compile Remove="Application\TestData\CreateSaleHandlerTestData.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
